@@ -1,1 +1,48 @@
+Concept -> 
+To Route in next.js -> create the next app(npx create-next-app) , if selected no on app router 
+-> create a pages folder in the main level not in the src folder 
+-> inside it have another folder of the route name you want to have 
+-> inside that folder have an index.js (now the contents of index.js will be displayed on hitting that very folder named route )
+-> Now In The Case We Want To Have Content Displayed Based On Some Parameter :---> ***START BY CREATING A FILE NAMED INSIDE [].JS AND THEN INSIDE THIS FILE WE WILL HAVE THE useRouter HOOK 
+OF NEXT.JS WHICH WILL GIVE THE ROUTE PATH AND THEN WE WILL DESTRUCTURE THE QUERY FROM IT AND ALSO LINK IT WITH THE FILE NAME AS IT IS SO BY FOLLOWING THIS SYNTAX WE WILL ACQUIRE THE SPECIFIC PARAMETER WE WANT FROM OUR URL AND THEN WE WILL USE CONDITIONAL RENDERING TO FINALLY MATCH THIS PARAMETER WITH OUR HARDCODED DATA OR THE DATA FETCHED FROM THE DATABASE AND WE WILL DISPLAY THE DATA ACCORDING TO THE PARAMETER HENCE MAKING THE PAGE CONDITIONALLY AND DYNAMICALLY RENDERED 
+************************************************************************************************************************************************************************************************
+Example --> 
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+
+const DynamicContent = () => {
+    const router = useRouter();
+    const [developer, setDeveloper] = useState(null);
+    
+    const details = [
+        { id: 1, name: 'Aditya', role: 'Senior Developer' },
+        { id: 2, name: 'Aarav', role: 'Backend Developer' },
+        { id: 3, name: 'Suresh', role: 'Frontend Developer' },
+    ];
+
+    useEffect(() => {
+        if (router.query.userId) {
+            const slugid = parseInt(router.query.userId);
+            const foundDeveloper = details.find(item => item.id === slugid);
+
+            if (foundDeveloper) {
+                setDeveloper(foundDeveloper);
+            } else {
+                setDeveloper({ name: 'Developer does not exist', role: '' });
+            }
+        }
+    }, [router.query.userId]);
+
+    if (!developer) {
+        return <p>Loading...</p>;  // Show loading message while waiting for the slugid to be available
+    }
+
+    return (
+        <div>
+            <p>{developer.name} {developer.role}</p>
+        </div>
+    );
+};
+
+export default DynamicContent;
 
